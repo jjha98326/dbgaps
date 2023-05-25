@@ -100,11 +100,11 @@ plt.xlabel('theoretical quantiles')
 plt.ylabel('sample quantiles');
 # plt.show()
 
-# for sym in symbols:
-#     print('\nResults for symbol {}'.format(sym))
-#     print(32*'-')
-#     log_data=np.array(log_returns[sym].dropna())
-#     normality_tests(log_data)
+for sym in symbols:
+    print('\nResults for symbol {}'.format(sym))
+    print(32*'-')
+    log_data=np.array(log_returns[sym].dropna())
+    normality_tests(log_data)
 
 noa=len(symbols)
 
@@ -212,7 +212,7 @@ for p in range(10000):
     pvols.append(port_vol(portfolio_weights))
 prets=np.array(prets)
 pvols=np.array(pvols)
-prets_minus_rf=prets-0.3455
+prets_minus_rf=prets-0.03455
 plt.figure(figsize=(10,6))
 plt.scatter(pvols,prets, c=prets_minus_rf/pvols, marker='o', cmap='coolwarm')
 plt.xlabel('expected volatility')
@@ -220,7 +220,7 @@ plt.ylabel('expected return')
 plt.colorbar(label='Sharpe ratio')
 plt.show()
 
-a=port_ret(portfolio_weights)-0.3455
+a=port_ret(portfolio_weights)-0.03455
 
 import scipy.optimize as sco
 def min_func_sharp(portfolio_weights):
@@ -250,7 +250,9 @@ initial_weights = np.ones(15) / 15  # 모든 자산에 대한 초기 비중
 print(min_func_sharp(portfolio_weights))
 
 opts=sco.minimize(min_func_sharp, initial_weights, method='SLSQP', bounds=bnds, constraints=constraints)
-print(opts['x'].round(3))
 print(port_ret(opts['x']).round(3))
 print(port_vol(opts['x']).round(3))
 print(port_ret(opts['x'])/port_vol(opts['x']))
+weight_result=opts.x
+for i in range(len(weight_result)):
+    print(f'자산{i+1}:{weight_result[i]}')
